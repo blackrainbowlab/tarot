@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional AI-powered tarot reading app with multiple spreads, history, and accessibility">
+    <title>Mystical AI Tarot - Professional Reading Experience</title>
+    <style>
+        /* ======================== */
+        /* Core Styles & Variables */
+        /* ======================== */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e3c72, #2a5298, #7e22ce, #1e3c72);
+            --card-bg: linear-gradient(135deg, #fef3c7, #fbbf24);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-gold: #fbbf24;
+            --shadow-glow: 0 0 30px rgba(147, 51, 234, 0.8);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: var(--primary-gradient);
+            background-size: 400% 400%;
+            animation: cosmicShift 15s ease infinite;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--text-gold);
+            outline-offset: 2px;
+        }
+
+        /* Skip to content link for screen readers */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--text-gold);
+            color: #000;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-to-content:focus {
+            top: 0;
+        }
+
+        @keyframes cosmicShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ======================== */
+        /* Animated Background */
+        /* ======================== */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* ======================== */
+        /* Layout Components */
+        /* ======================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header with controls */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.9em;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: var(--text-gold);
+            color: #000;
+        }
+
+        /* Main title */
+        h1 {
+            text-align: center;
+            font-size: clamp(2em, 5vw, 3em);
+            margin-bottom: 10px;
+            text-shadow: var(--shadow-glow);
+            animation: glow 2s ease-in-out infinite alternate;
+            width: 100%;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(147, 51, 234, 0.8); }
+            to { text-shadow: 0 0 40px rgba(147, 51, 234, 1), 0 0 50px rgba(59, 130, 246, 0.8); }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: clamp(1em, 3vw, 1.2em);
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        /* ======================== */
+        /* Glass Panels */
+        /* ======================== */
+        .glass-panel {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ======================== */
+        /* Spread Selection */
+        /* ======================== */
+        .spread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .spread-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+        }
+
+        .spread-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            border-color: var(--text-gold);
+        }
+
+        .spread-card h3 {
+            color: var(--text-gold);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .spread-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* ======================== */
+        /* Question Input */
+        /* ======================== */
+        .question-section {
+            margin-bottom: 25px;
+        }
+
+        .question-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1em;
+            border-radius: 25px;
+            border: 2px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: white;
+            font-family: 'Georgia', serif;
+            transition: var(--transition-smooth);
+        }
+
+        .question-input:focus {
+            border-color: var(--text-gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .question-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .suggestion-chip {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid var(--text-gold);
+            color: var(--text-gold);
+            padding: 5px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: var(--transition-smooth);
+        }
+
+        .suggestion-chip:hover {
+            background: var(--text-gold);
+            color: #000;
+        }
+
+        /* ======================== */
+        /* Card Deck */
+        /* ======================== */
+        .card-deck {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 30px;
+            min-height: 150px;
+        }
+
+        .card-back {
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid gold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        .card-back:hover {
+            transform: translateY(-10px) rotateZ(2deg);
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.5);
+            border-color: #9333ea;
+        }
+
+        /* ======================== */
+        /* Spread Display */
+        /* ======================== */
+        .spread-area {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .spread-area.active {
+            display: block;
+        }
+
+        .cards-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+            justify-items: center;
+        }
+
+        .cards-container.one-card { grid-template-columns: 1fr; }
+        .cards-container.three-card { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .cards-container.five-card { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+        .cards-container.celtic-cross { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+        /* ======================== */
+        /* Card Display */
+        /* ======================== */
+        .card-position {
+            text-align: center;
+            opacity: 0;
+            animation: cardReveal 0.6s ease forwards;
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-90deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .position-label {
+            font-size: 0.9em;
+            color: var(--text-gold);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            width: 180px;
+            height: 270px;
+            background: var(--card-bg);
+            border: 3px solid #f59e0b;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card.reversed {
+            transform: rotate(180deg);
+        }
+
+        .card.reversed:hover {
+            transform: rotate(180deg) scale(1.05);
+        }
+
+        .card-symbol {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .card-name {
+            font-size: 1em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .card-meaning {
+            font-size: 0.75em;
+            color: #0f172a;
+            text-align: center;
+            line-height: 1.4;
+            padding: 0 5px;
+        }
+
+        /* ======================== */
+        /* Card Detail Modal */
+        /* ======================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid var(--text-gold);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--text-gold);
+            color: #000;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ======================== */
+        /* Interpretation Section */
+        /* ======================== */
+        .interpretation {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            margin-top: 30px;
+        }
+
+        .interpretation h3 {
+            color: var(--text-gold);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .interpretation-text {
+            line-height: 1.8;
+        }
+
+        .interpretation-text p {
+            margin-bottom: 15px;
+        }
+
+        /* ======================== */
+        /* History Panel */
+        /* ======================== */
+        .history-panel {
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .history-panel.active {
+            display: block;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-gold);
+        }
+
+        .history-date {
+            color: var(--text-gold);
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .history-spread {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .history-action-btn {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid var(--text-gold);
+            color: var(--text-gold);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: var(--transition-smooth);
+        }
+
+        .history-action-btn:hover {
+            background: var(--text-gold);
+            color: #000;
+        }
+
+        /* ======================== */
+        /* Loading States */
+        /* ======================== */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--text-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-gold);
+        }
+
+        /* ======================== */
+        /* Action Buttons */
+        /* ======================== */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-family: 'Georgia', serif;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .share-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .save-button {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* ======================== */
+        /* Settings Panel */
+        /* ======================== */
+        .settings-panel {
+            display: none;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-switch.active {
+            background: var(--text-gold);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        /* ======================== */
+        /* Responsive Design */
+        /* ======================== */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .header { flex-direction: column; }
+            .controls { width: 100%; justify-content: center; }
+            .spread-grid { grid-template-columns: 1fr; }
+            .cards-container { grid-template-columns: 1fr !important; }
+            .card { width: 160px; height: 240px; }
+            .card-symbol { font-size: 2em; }
+            .card-name { font-size: 0.9em; }
+            .card-meaning { font-size: 0.7em; }
+            
+            /* Touch-friendly sizing */
+            button { padding: 14px 28px; }
+            .control-btn { padding: 10px 18px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 20px 10px; }
+            .glass-panel { padding: 20px; }
+            .card { width: 140px; height: 210px; }
+        }
+
+        /* ======================== */
+        /* Print Styles */
+        /* ======================== */
+        @media print {
+            body { background: white; color: black; }
+            .controls, .card-deck, .action-buttons { display: none; }
+            .card { border: 1px solid black; box-shadow: none; }
+        }
+
+        /* ======================== */
+        /* Accessibility - High Contrast */
+        /* ======================== */
+        .high-contrast {
+            --glass-bg: rgba(0, 0, 0, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-gold: #ffff00;
+        }
+
+        .high-contrast .card {
+            background: white;
+            color: black;
+            border: 3px solid black;
+        }
+
+        /* ======================== */
+        /* Animations Toggle */
+        /* ======================== */
+        .reduce-motion * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        /* ======================== */
+        /* Error Messages */
+        /* ======================== */
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .success-message {
+            color: #10b981;
+            text-align: center;
+            padding: 15px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* ======================== */
+        /* Daily Card Feature */
+        /* ======================== */
+        .daily-card-banner {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+            border: 2px solid var(--text-gold);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .daily-card-banner.active {
+            display: block;
+        }
+
+        .daily-card-banner h3 {
+            color: var(--text-gold);
+            margin-bottom: 15px;
+        }
+
+        /* Sound toggle */
+        .sound-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            z-index: 100;
+        }
+
+        .sound-indicator:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-to-content">Skip to main content</a>
+    
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div style="width: 100%;">
+                <h1>✨ Mystical AI Tarot ✨</h1>
+                <p class="subtitle">Professional tarot readings powered by AI</p>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="window.app?.toggleDailyCard()" aria-label="Get daily card">
+                    📅 Daily Card
+                </button>
+                <button class="control-btn" onclick="window.app?.toggleHistory()" aria-label="View reading history">
+                    📚 History
+                </button>
+                <button class="control-btn" onclick="window.app?.toggleSettings()" aria-label="Open settings">
+                    ⚙️ Settings
+                </button>
+                <button class="control-btn" onclick="window.app?.toggleHighContrast()" aria-label="Toggle high contrast">
+                    🔆 Contrast
+                </button>
+            </div>
+        </div>
+
+        <!-- Daily Card Banner -->
+        <div class="daily-card-banner" id="dailyCardBanner">
+            <h3>🌅 Your Daily Card</h3>
+            <div id="dailyCardDisplay"></div>
+            <button onclick="window.app?.drawDailyCard()">Draw Today's Card</button>
+        </div>
+
+        <!-- History Panel -->
+        <div class="glass-panel history-panel" id="historyPanel">
+            <h2>📖 Your Reading History</h2>
+            <div id="historyList">
+                <p style="opacity: 0.7;">No readings yet. Start your first reading below!</p>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="glass-panel settings-panel" id="settingsPanel">
+            <h2>⚙️ Settings</h2>
+            <div class="setting-row">
+                <label for="soundToggle">Sound Effects</label>
+                <div class="toggle-switch" id="soundToggle" onclick="window.app?.toggleSound()" role="switch" aria-checked="false"></div>
+            </div>
+            <div class="setting-row">
+                <label for="animationToggle">Animations</label>
+                <div class="toggle-switch active" id="animationToggle" onclick="window.app?.toggleAnimations()" role="switch" aria-checked="true"></div>
+            </div>
+            <div class="setting-row">
+                <label for="reversalsToggle">Include Reversed Cards</label>
+                <div class="toggle-switch active" id="reversalsToggle" onclick="window.app?.toggleReversals()" role="switch" aria-checked="true"></div>
+            </div>
+            <div class="setting-row">
+                <label for="apiKeyInput">Gemini API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="Enter your API key" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 5px 10px; border-radius: 5px;">
+                <button onclick="window.app?.saveApiKey()" style="padding: 5px 15px; font-size: 0.9em;">Save</button>
+            </div>
+        </div>
+
+        <!-- Main Spread Selector -->
+        <div class="glass-panel" id="spreadSelector">
+            <h2>Begin Your Reading</h2>
+            
+            <div class="question-section">
+                <input 
+                    type="text" 
+                    id="userQuestion" 
+                    class="question-input"
+                    placeholder="What guidance do you seek? (optional)"
+                    aria-label="Enter your question for the tarot reading"
+                >
+                <div class="question-suggestions">
+                    <div class="suggestion-chip" onclick="window.app?.setQuestion('What do I need to know today?')">
+                        What do I need to know today?
+                    </div>
+                    <div class="suggestion-chip" onclick="window.app?.setQuestion('How can I improve my relationships?')">
+                        Relationships
+                    </div>
+                    <div class="suggestion-chip" onclick="window.app?.setQuestion('What should I focus on in my career?')">
+                        Career Focus
+                    </div>
+                    <div class="suggestion-chip" onclick="window.app?.setQuestion('What is blocking my progress?')">
+                        Blockages
+                    </div>
+                </div>
+            </div>
+
+            <h3>Choose Your Spread</h3>
+            <div class="spread-grid">
+                <div class="spread-card" onclick="window.app?.selectSpread('single')" role="button" tabindex="0" aria-label="Single card for quick insight">
+                    <h3>🎯 Single Card</h3>
+                    <p>Quick insight into your current situation</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('three')" role="button" tabindex="0" aria-label="Three card past present future spread">
+                    <h3>⏳ Past-Present-Future</h3>
+                    <p>Timeline perspective on your journey</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('five')" role="button" tabindex="0" aria-label="Five card relationship spread">
+                    <h3>💕 Relationship</h3>
+                    <p>Deep dive into relationship dynamics</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('celtic')" role="button" tabindex="0" aria-label="Celtic cross ten card spread">
+                    <h3>🔮 Celtic Cross</h3>
+                    <p>Comprehensive 10-card analysis</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('career')" role="button" tabindex="0" aria-label="Six card career spread">
+                    <h3>💼 Career Path</h3>
+                    <p>Professional guidance and opportunities</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('chakra')" role="button" tabindex="0" aria-label="Seven card chakra spread">
+                    <h3>🌈 Chakra Balance</h3>
+                    <p>Energy center alignment reading</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('yes-no')" role="button" tabindex="0" aria-label="Yes or no single card">
+                    <h3>✅ Yes/No</h3>
+                    <p>Direct answer to a specific question</p>
+                </div>
+                <div class="spread-card" onclick="window.app?.selectSpread('month')" role="button" tabindex="0" aria-label="Four week forecast">
+                    <h3>📅 Month Ahead</h3>
+                    <p>Four-week forecast</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card Deck Display -->
+        <div class="glass-panel card-deck" id="cardDeck" style="display: none;">
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0" aria-label="Click to draw cards">🌙</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">⭐</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">🔮</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">✨</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">🌟</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">💫</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">🌙</div>
+            <div class="card-back" onclick="window.app?.drawCards()" role="button" tabindex="0">⭐</div>
+        </div>
+        
+        <!-- Spread Display Area -->
+        <div class="spread-area" id="spreadArea">
+            <div class="cards-container" id="cardsContainer"></div>
+            
+            <div class="interpretation" id="interpretation" style="display: none;">
+                <h3>Your AI Interpretation</h3>
+                <div class="interpretation-text" id="interpretationText"></div>
+                
+                <div class="action-buttons">
+                    <button class="save-button" onclick="window.app?.saveReading()" aria-label="Save this reading">
+                        💾 Save Reading
+                    </button>
+                    <button class="share-button" onclick="window.app?.shareReading()" aria-label="Share this reading">
+                        📤 Share
+                    </button>
+                    <button class="reset-button" onclick="window.app?.resetReading()" aria-label="Start new reading">
+                        🔄 New Reading
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Detail Modal -->
+    <div class="modal" id="cardModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" onclick="window.app?.closeModal()" aria-label="Close modal">×</button>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Sound Toggle Indicator -->
+    <div class="sound-indicator" onclick="window.app?.toggleSound()" aria-label="Toggle sound">
+        <span id="soundIcon">🔇</span>
+    </div>
+
+    <script>
+        // Initialize app variable immediately to prevent reference errors
+        let app;
+        
+        // ================================
+        // Enhanced Tarot App Class
+        // ================================
+        class TarotApp {
+            constructor() {
+                this.state = {
+                    currentSpread: null,
+                    drawnCards: [],
+                    userQuestion: '',
+                    readingHistory: [],
+                    dailyCard: null,
+                    settings: {
+                        soundEnabled: false,
+                        animationsEnabled: true,
+                        reversalsEnabled: true,
+                        highContrast: false,
+                        apiKey: ''
+                    }
+                };
+
+                this.spreads = {
+                    single: { name: 'Single Card', positions: ['Present Situation'], count: 1 },
+                    three: { name: 'Past-Present-Future', positions: ['Past', 'Present', 'Future'], count: 3 },
+                    five: { name: 'Relationship', positions: ['You', 'Partner', 'Connection', 'Challenges', 'Outcome'], count: 5 },
+                    celtic: { 
+                        name: 'Celtic Cross', 
+                        positions: ['Present', 'Challenge', 'Distant Past', 'Recent Past', 'Possible Outcome', 
+                                  'Immediate Future', 'Your Approach', 'External Influences', 'Hopes/Fears', 'Final Outcome'], 
+                        count: 10 
+                    },
+                    career: { name: 'Career Path', positions: ['Current Position', 'Strengths', 'Challenges', 'Opportunities', 'Action', 'Outcome'], count: 6 },
+                    chakra: { 
+                        name: 'Chakra Balance', 
+                        positions: ['Root', 'Sacral', 'Solar Plexus', 'Heart', 'Throat', 'Third Eye', 'Crown'], 
+                        count: 7 
+                    },
+                    'yes-no': { name: 'Yes/No', positions: ['Answer'], count: 1 },
+                    month: { name: 'Month Ahead', positions: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], count: 4 }
+                };
+
+                this.tarotDeck = this.initializeDeck();
+                this.init();
+            }
+
+            init() {
+                this.loadSettings();
+                this.loadHistory();
+                this.checkDailyCard();
+                this.createStars();
+                this.setupKeyboardNavigation();
+                this.setupAudioContext();
+            }
+
+            initializeDeck() {
+                return [
+                    // Major Arcana
+                    { symbol: "🎭", name: "The Fool", meaning: "New beginnings, innocence, spontaneity", reversed: "Recklessness, risk-taking", keywords: ['beginning', 'innocence', 'spontaneity'] },
+                    { symbol: "🎩", name: "The Magician", meaning: "Manifestation, resourcefulness, power", reversed: "Manipulation, poor planning", keywords: ['power', 'skill', 'concentration'] },
+                    { symbol: "🔮", name: "The High Priestess", meaning: "Intuition, sacred knowledge", reversed: "Secrets, disconnected from intuition", keywords: ['intuition', 'mystery', 'subconscious'] },
+                    { symbol: "👑", name: "The Empress", meaning: "Femininity, beauty, nature, abundance", reversed: "Creative block, dependence", keywords: ['fertility', 'femininity', 'beauty'] },
+                    { symbol: "⚔️", name: "The Emperor", meaning: "Authority, structure, control", reversed: "Tyranny, rigidity", keywords: ['authority', 'structure', 'control'] },
+                    { symbol: "📿", name: "The Hierophant", meaning: "Spiritual wisdom, tradition", reversed: "Personal beliefs, freedom", keywords: ['tradition', 'conformity', 'education'] },
+                    { symbol: "💕", name: "The Lovers", meaning: "Love, harmony, relationships", reversed: "Disharmony, imbalance", keywords: ['love', 'union', 'relationships'] },
+                    { symbol: "🏇", name: "The Chariot", meaning: "Control, willpower, success", reversed: "Lack of control, aggression", keywords: ['triumph', 'control', 'determination'] },
+                    { symbol: "🦁", name: "Strength", meaning: "Inner strength, courage, patience", reversed: "Self doubt, weakness", keywords: ['strength', 'courage', 'patience'] },
+                    { symbol: "🕯️", name: "The Hermit", meaning: "Soul searching, introspection", reversed: "Isolation, loneliness", keywords: ['introspection', 'searching', 'guidance'] },
+                    { symbol: "☸️", name: "Wheel of Fortune", meaning: "Good luck, karma, life cycles", reversed: "Bad luck, lack of control", keywords: ['fortune', 'karma', 'cycles'] },
+                    { symbol: "⚖️", name: "Justice", meaning: "Justice, fairness, truth", reversed: "Unfairness, dishonesty", keywords: ['justice', 'fairness', 'truth'] },
+                    { symbol: "🔄", name: "The Hanged Man", meaning: "Suspension, letting go", reversed: "Martyrdom, indecision", keywords: ['sacrifice', 'release', 'martyrdom'] },
+                    { symbol: "💀", name: "Death", meaning: "Endings, beginnings, transformation", reversed: "Resistance to change", keywords: ['transformation', 'endings', 'transition'] },
+                    { symbol: "🏺", name: "Temperance", meaning: "Balance, moderation, patience", reversed: "Imbalance, excess", keywords: ['balance', 'moderation', 'patience'] },
+                    { symbol: "😈", name: "The Devil", meaning: "Bondage, addiction, materialism", reversed: "Releasing limiting beliefs", keywords: ['bondage', 'materialism', 'ignorance'] },
+                    { symbol: "⚡", name: "The Tower", meaning: "Sudden change, upheaval, chaos", reversed: "Personal transformation", keywords: ['destruction', 'upheaval', 'revelation'] },
+                    { symbol: "⭐", name: "The Star", meaning: "Hope, faith, purpose, renewal", reversed: "Lack of faith, despair", keywords: ['hope', 'inspiration', 'serenity'] },
+                    { symbol: "🌙", name: "The Moon", meaning: "Illusion, fear, anxiety", reversed: "Release of fear", keywords: ['illusion', 'fear', 'subconscious'] },
+                    { symbol: "☀️", name: "The Sun", meaning: "Joy, success, celebration", reversed: "Inner child, feeling down", keywords: ['joy', 'success', 'vitality'] },
+                    { symbol: "🎺", name: "Judgement", meaning: "Reflection, reckoning", reversed: "Self doubt, inner critic", keywords: ['rebirth', 'inner calling', 'absolution'] },
+                    { symbol: "🌍", name: "The World", meaning: "Completion, accomplishment", reversed: "Lack of closure", keywords: ['completion', 'accomplishment', 'travel'] },
+                    
+                    // Wands
+                    { symbol: "🔥✨", name: "Ace of Wands", meaning: "Inspiration, new opportunities", reversed: "Delays, lack of direction", keywords: ['creation', 'invention', 'enterprise'] },
+                    { symbol: "🔥🌍", name: "Two of Wands", meaning: "Planning, making decisions", reversed: "Fear of change", keywords: ['planning', 'progress', 'decisions'] },
+                    { symbol: "🔥👁️", name: "Three of Wands", meaning: "Expansion, foresight", reversed: "Playing small", keywords: ['expansion', 'foresight', 'leadership'] },
+                    { symbol: "🔥🏡", name: "Four of Wands", meaning: "Celebration, harmony", reversed: "Lack of harmony", keywords: ['celebration', 'harmony', 'marriage'] },
+                    { symbol: "🔥⚔️", name: "Five of Wands", meaning: "Competition, conflict", reversed: "Avoiding conflict", keywords: ['competition', 'conflict', 'strife'] },
+                    { symbol: "🔥🏆", name: "Six of Wands", meaning: "Success, recognition", reversed: "Private achievement", keywords: ['victory', 'success', 'recognition'] },
+                    { symbol: "🔥🛡️", name: "Seven of Wands", meaning: "Challenge, perseverance", reversed: "Exhaustion", keywords: ['challenge', 'competition', 'perseverance'] },
+                    { symbol: "🔥⚡", name: "Eight of Wands", meaning: "Movement, fast change", reversed: "Delays", keywords: ['speed', 'action', 'air travel'] },
+                    { symbol: "🔥💪", name: "Nine of Wands", meaning: "Courage, persistence", reversed: "Exhaustion", keywords: ['courage', 'persistence', 'test'] },
+                    { symbol: "🔥📦", name: "Ten of Wands", meaning: "Burden, responsibility", reversed: "Doing it all", keywords: ['burden', 'responsibility', 'hard work'] },
+                    { symbol: "🔥📖", name: "Page of Wands", meaning: "Enthusiasm, exploration", reversed: "Lack of direction", keywords: ['enthusiasm', 'exploration', 'discovery'] },
+                    { symbol: "🔥🏇", name: "Knight of Wands", meaning: "Energy, passion, adventure", reversed: "Anger, impulsiveness", keywords: ['energy', 'passion', 'inspired action'] },
+                    { symbol: "🔥👑", name: "Queen of Wands", meaning: "Confidence, independence", reversed: "Self-respect", keywords: ['confidence', 'independence', 'determination'] },
+                    { symbol: "🔥🦁", name: "King of Wands", meaning: "Natural leader, vision", reversed: "Impulsiveness", keywords: ['leadership', 'vision', 'entrepreneur'] },
+                    
+                    // Cups
+                    { symbol: "💧❤️", name: "Ace of Cups", meaning: "Love, new relationships", reversed: "Self-love", keywords: ['love', 'new feelings', 'spirituality'] },
+                    { symbol: "💧💑", name: "Two of Cups", meaning: "Partnership, unity", reversed: "Self-love", keywords: ['unity', 'partnership', 'two become one'] },
+                    { symbol: "💧🎉", name: "Three of Cups", meaning: "Celebration, friendship", reversed: "Independence", keywords: ['celebration', 'friendship', 'creativity'] },
+                    { symbol: "💧🧘", name: "Four of Cups", meaning: "Meditation, contemplation", reversed: "Retreat", keywords: ['meditation', 'contemplation', 'apathy'] },
+                    { symbol: "💧😢", name: "Five of Cups", meaning: "Loss, grief", reversed: "Acceptance", keywords: ['loss', 'grief', 'disappointment'] },
+                    { symbol: "💧🎁", name: "Six of Cups", meaning: "Nostalgia, memories", reversed: "Moving forward", keywords: ['nostalgia', 'happy memories', 'reunion'] },
+                    { symbol: "💧☁️", name: "Seven of Cups", meaning: "Choices, fantasy", reversed: "Clarity", keywords: ['choices', 'fantasy', 'illusion'] },
+                    { symbol: "💧🚶", name: "Eight of Cups", meaning: "Walking away", reversed: "Fear of change", keywords: ['walking away', 'disillusionment', 'leaving'] },
+                    { symbol: "💧😊", name: "Nine of Cups", meaning: "Satisfaction, emotional stability", reversed: "Inner happiness", keywords: ['satisfaction', 'contentment', 'wish fulfilled'] },
+                    { symbol: "💧🌈", name: "Ten of Cups", meaning: "Harmony, happiness", reversed: "Misalignment", keywords: ['happiness', 'harmony', 'alignment'] },
+                    { symbol: "💧🐠", name: "Page of Cups", meaning: "Creative opportunities", reversed: "New ideas", keywords: ['creative', 'intuitive', 'new idea'] },
+                    { symbol: "💧🤴", name: "Knight of Cups", meaning: "Romance, charm", reversed: "Jealousy", keywords: ['romance', 'charm', 'imagination'] },
+                    { symbol: "💧👸", name: "Queen of Cups", meaning: "Compassion, calm", reversed: "Martyrdom", keywords: ['compassion', 'calm', 'intuitive'] },
+                    { symbol: "💧🔱", name: "King of Cups", meaning: "Compassion, control", reversed: "Coldness", keywords: ['compassion', 'control', 'balance'] },
+                    
+                    // Swords
+                    { symbol: "⚔️💡", name: "Ace of Swords", meaning: "New ideas, mental clarity", reversed: "Inner clarity", keywords: ['breakthrough', 'clarity', 'sharp mind'] },
+                    { symbol: "⚔️👁️", name: "Two of Swords", meaning: "Difficult choices", reversed: "Indecision", keywords: ['choices', 'indecision', 'stalemate'] },
+                    { symbol: "⚔️💔", name: "Three of Swords", meaning: "Heartbreak, suffering", reversed: "Recovery", keywords: ['heartbreak', 'suffering', 'grief'] },
+                    { symbol: "⚔️😴", name: "Four of Swords", meaning: "Rest, restoration", reversed: "Restlessness", keywords: ['rest', 'restoration', 'contemplation'] },
+                    { symbol: "⚔️🥊", name: "Five of Swords", meaning: "Conflict, disagreements", reversed: "Reconciliation", keywords: ['conflict', 'disagreements', 'competition'] },
+                    { symbol: "⚔️⛵", name: "Six of Swords", meaning: "Transition, leaving behind", reversed: "Emotional baggage", keywords: ['transition', 'moving on', 'travel'] },
+                    { symbol: "⚔️🦊", name: "Seven of Swords", meaning: "Deception, strategy", reversed: "Coming clean", keywords: ['deception', 'trickery', 'tactics'] },
+                    { symbol: "⚔️🔗", name: "Eight of Swords", meaning: "Imprisonment, entrapment", reversed: "Self acceptance", keywords: ['imprisonment', 'powerlessness', 'restriction'] },
+                    { symbol: "⚔️😰", name: "Nine of Swords", meaning: "Anxiety, worry", reversed: "Hope", keywords: ['anxiety', 'worry', 'fear'] },
+                    { symbol: "⚔️🌅", name: "Ten of Swords", meaning: "Betrayal, defeat", reversed: "Recovery", keywords: ['betrayal', 'defeat', 'crisis'] },
+                    { symbol: "⚔️📚", name: "Page of Swords", meaning: "Curiosity, restlessness", reversed: "Deception", keywords: ['curiosity', 'restlessness', 'mental energy'] },
+                    { symbol: "⚔️🎐", name: "Knight of Swords", meaning: "Ambitious, action-oriented", reversed: "Restless", keywords: ['ambitious', 'fast thinking', 'driven'] },
+                    { symbol: "⚔️❄️", name: "Queen of Swords", meaning: "Complexity, perceptiveness", reversed: "Cold hearted", keywords: ['complexity', 'perceptiveness', 'clear mindedness'] },
+                    { symbol: "⚔️⚖️", name: "King of Swords", meaning: "Mental clarity, intellectual power", reversed: "Manipulative", keywords: ['mental clarity', 'intellectual', 'power'] },
+                    
+                    // Pentacles
+                    { symbol: "💰🌱", name: "Ace of Pentacles", meaning: "Opportunity, prosperity", reversed: "Lost opportunity", keywords: ['opportunity', 'prosperity', 'new venture'] },
+                    { symbol: "💰🔄", name: "Two of Pentacles", meaning: "Balance, adaptability", reversed: "Imbalance", keywords: ['balance', 'adaptability', 'time management'] },
+                    { symbol: "💰🏗️", name: "Three of Pentacles", meaning: "Teamwork, collaboration", reversed: "Disorganized", keywords: ['teamwork', 'collaboration', 'building'] },
+                    { symbol: "💰🔐", name: "Four of Pentacles", meaning: "Conservation, frugality", reversed: "Greediness", keywords: ['conservation', 'security', 'control'] },
+                    { symbol: "💰❄️", name: "Five of Pentacles", meaning: "Need, poverty", reversed: "Recovery", keywords: ['need', 'poverty', 'insecurity'] },
+                    { symbol: "💰🤝", name: "Six of Pentacles", meaning: "Charity, generosity", reversed: "Strings attached", keywords: ['charity', 'generosity', 'sharing'] },
+                    { symbol: "💰🌾", name: "Seven of Pentacles", meaning: "Hard work, perseverance", reversed: "Lack of reward", keywords: ['perseverance', 'investment', 'effort'] },
+                    { symbol: "💰🔨", name: "Eight of Pentacles", meaning: "Apprenticeship, passion", reversed: "Lack of passion", keywords: ['apprenticeship', 'passion', 'high standards'] },
+                    { symbol: "💰🦚", name: "Nine of Pentacles", meaning: "Fruits of labor, rewards", reversed: "Reckless spending", keywords: ['luxury', 'self-sufficiency', 'material abundance'] },
+                    { symbol: "💰🏰", name: "Ten of Pentacles", meaning: "Legacy, culmination", reversed: "Fleeting success", keywords: ['legacy', 'inheritance', 'long-term success'] },
+                    { symbol: "💰📖", name: "Page of Pentacles", meaning: "Ambition, diligence", reversed: "Lack of commitment", keywords: ['ambition', 'diligence', 'new opportunity'] },
+                    { symbol: "💰🐂", name: "Knight of Pentacles", meaning: "Efficiency, hard work", reversed: "Laziness", keywords: ['efficiency', 'hard work', 'responsibility'] },
+                    { symbol: "💰🌻", name: "Queen of Pentacles", meaning: "Practicality, creature comforts", reversed: "Self-centeredness", keywords: ['practicality', 'security', 'motherly'] },
+                    { symbol: "💰👔", name: "King of Pentacles", meaning: "Abundance, prosperity", reversed: "Greed", keywords: ['abundance', 'prosperity', 'security'] }
+                ];
+            }
+
+            // Settings Management
+            loadSettings() {
+                const saved = localStorage.getItem('tarotSettings');
+                if (saved) {
+                    this.state.settings = { ...this.state.settings, ...JSON.parse(saved) };
+                    if (this.state.settings.highContrast) {
+                        document.body.classList.add('high-contrast');
+                    }
+                    if (!this.state.settings.animationsEnabled) {
+                        document.body.classList.add('reduce-motion');
+                    }
+                    this.updateSoundIcon();
+                }
+            }
+
+            saveSettings() {
+                localStorage.setItem('tarotSettings', JSON.stringify(this.state.settings));
+            }
+
+            // History Management
+            loadHistory() {
+                const saved = localStorage.getItem('tarotHistory');
+                if (saved) {
+                    this.state.readingHistory = JSON.parse(saved);
+                    this.updateHistoryDisplay();
+                }
+            }
+
+            saveHistory() {
+                localStorage.setItem('tarotHistory', JSON.stringify(this.state.readingHistory));
+            }
+
+            updateHistoryDisplay() {
+                const historyList = document.getElementById('historyList');
+                if (this.state.readingHistory.length === 0) {
+                    historyList.innerHTML = '<p style="opacity: 0.7;">No readings yet. Start your first reading below!</p>';
+                    return;
+                }
+
+                historyList.innerHTML = this.state.readingHistory.map((reading, index) => `
+                    <div class="history-item">
+                        <div class="history-date">${new Date(reading.date).toLocaleDateString()} ${new Date(reading.date).toLocaleTimeString()}</div>
+                        <div class="history-spread">${reading.spreadName} - ${reading.cards.length} cards</div>
+                        ${reading.question ? `<div style="font-size: 0.85em; margin-top: 5px;">"${reading.question}"</div>` : ''}
+                        <div class="history-actions">
+                            <button class="history-action-btn" onclick="window.app?.viewReading(${index})">View</button>
+                            <button class="history-action-btn" onclick="window.app?.deleteReading(${index})">Delete</button>
+                            ${reading.favorite ? '<span style="color: gold;">⭐</span>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Daily Card Feature
+            checkDailyCard() {
+                const today = new Date().toDateString();
+                const savedDaily = localStorage.getItem('dailyCard');
+                if (savedDaily) {
+                    const parsed = JSON.parse(savedDaily);
+                    if (parsed.date === today) {
+                        this.state.dailyCard = parsed.card;
+                    }
+                }
+            }
+
+            drawDailyCard() {
+                const today = new Date().toDateString();
+                const shuffled = [...this.tarotDeck].sort(() => Math.random() - 0.5);
+                const card = shuffled[0];
+                const isReversed = Math.random() > 0.5;
+                
+                this.state.dailyCard = { ...card, isReversed, date: today };
+                localStorage.setItem('dailyCard', JSON.stringify(this.state.dailyCard));
+                
+                const display = document.getElementById('dailyCardDisplay');
+                display.innerHTML = `
+                    <div class="card ${isReversed ? 'reversed' : ''}" style="margin: 0 auto;" onclick="window.app?.showCardDetail(${this.tarotDeck.indexOf(card)})">
+                        <div class="card-symbol">${card.symbol}</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-meaning">${isReversed ? card.reversed : card.meaning}</div>
+                    </div>
+                    <p style="margin-top: 15px;">This energy will guide your day. Click the card for more details.</p>
+                `;
+                
+                if (this.state.settings.soundEnabled) {
+                    this.playSound('draw');
+                }
+            }
+
+            toggleDailyCard() {
+                const banner = document.getElementById('dailyCardBanner');
+                banner.classList.toggle('active');
+                if (banner.classList.contains('active') && !this.state.dailyCard) {
+                    this.drawDailyCard();
+                } else if (this.state.dailyCard && this.state.dailyCard.date === new Date().toDateString()) {
+                    const display = document.getElementById('dailyCardDisplay');
+                    const card = this.state.dailyCard;
+                    display.innerHTML = `
+                        <div class="card ${card.isReversed ? 'reversed' : ''}" style="margin: 0 auto;">
+                            <div class="card-symbol">${card.symbol}</div>
+                            <div class="card-name">${card.name}</div>
+                            <div class="card-meaning">${card.isReversed ? card.reversed : card.meaning}</div>
+                        </div>
+                        <p style="margin-top: 15px;">This energy will guide your day.</p>
+                    `;
+                }
+            }
+
+            // UI Toggles
+            toggleHistory() {
+                const panel = document.getElementById('historyPanel');
+                panel.classList.toggle('active');
+            }
+
+            toggleSettings() {
+                const panel = document.getElementById('settingsPanel');
+                panel.classList.toggle('active');
+            }
+
+            toggleHighContrast() {
+                document.body.classList.toggle('high-contrast');
+                this.state.settings.highContrast = document.body.classList.contains('high-contrast');
+                this.saveSettings();
+            }
+
+            toggleSound() {
+                this.state.settings.soundEnabled = !this.state.settings.soundEnabled;
+                document.getElementById('soundToggle').classList.toggle('active');
+                this.updateSoundIcon();
+                this.saveSettings();
+                if (this.state.settings.soundEnabled) {
+                    this.playSound('toggle');
+                }
+            }
+
+            updateSoundIcon() {
+                document.getElementById('soundIcon').textContent = this.state.settings.soundEnabled ? '🔊' : '🔇';
+            }
+
+            toggleAnimations() {
+                this.state.settings.animationsEnabled = !this.state.settings.animationsEnabled;
+                document.getElementById('animationToggle').classList.toggle('active');
+                document.body.classList.toggle('reduce-motion');
+                this.saveSettings();
+            }
+
+            toggleReversals() {
+                this.state.settings.reversalsEnabled = !this.state.settings.reversalsEnabled;
+                document.getElementById('reversalsToggle').classList.toggle('active');
+                this.saveSettings();
+            }
+
+            // API Key Management
+            saveApiKey() {
+                const key = document.getElementById('apiKeyInput').value;
+                if (key) {
+                    this.state.settings.apiKey = key;
+                    this.saveSettings();
+                    this.showMessage('API key saved successfully!', 'success');
+                }
+            }
+
+            // Main Reading Functions
+            setQuestion(question) {
+                document.getElementById('userQuestion').value = question;
+            }
+
+            selectSpread(type) {
+                this.state.currentSpread = type;
+                this.state.userQuestion = document.getElementById('userQuestion').value;
+                
+                document.getElementById('spreadSelector').style.display = 'none';
+                document.getElementById('cardDeck').style.display = 'grid';
+                
+                if (this.state.settings.soundEnabled) {
+                    this.playSound('select');
+                }
+            }
+
+            drawCards() {
+                if (!this.state.currentSpread) return;
+                
+                document.getElementById('cardDeck').style.display = 'none';
+                document.getElementById('spreadArea').className = 'spread-area active';
+                
+                const spread = this.spreads[this.state.currentSpread];
+                const container = document.getElementById('cardsContainer');
+                container.innerHTML = '';
+                container.className = `cards-container ${this.state.currentSpread}-card`;
+                
+                // Shuffle and draw cards
+                const shuffled = [...this.tarotDeck].sort(() => Math.random() - 0.5);
+                this.state.drawnCards = [];
+                
+                for (let i = 0; i < spread.count; i++) {
+                    const card = shuffled[i];
+                    const isReversed = this.state.settings.reversalsEnabled ? Math.random() > 0.5 : false;
+                    
+                    this.state.drawnCards.push({
+                        ...card,
+                        isReversed,
+                        position: spread.positions[i]
+                    });
+                    
+                    // Create card element with animation delay
+                    setTimeout(() => {
+                        const cardDiv = this.createCardElement(card, isReversed, spread.positions[i], i);
+                        container.appendChild(cardDiv);
+                        
+                        if (this.state.settings.soundEnabled) {
+                            this.playSound('flip');
+                        }
+                    }, i * 300);
+                }
+                
+                // Get interpretation after all cards are drawn
+                setTimeout(() => this.getAIInterpretation(), spread.count * 300 + 500);
+            }
+
+            createCardElement(card, isReversed, position, index) {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card-position';
+                cardDiv.style.animationDelay = `${index * 0.1}s`;
+                
+                const posLabel = document.createElement('div');
+                posLabel.className = 'position-label';
+                posLabel.textContent = position;
+                
+                const cardEl = document.createElement('div');
+                cardEl.className = `card ${isReversed ? 'reversed' : ''}`;
+                // Use app from window to ensure it's accessible
+                const cardIndex = this.tarotDeck.indexOf(card);
+                cardEl.onclick = () => window.app?.showCardDetail(cardIndex);
+                cardEl.setAttribute('tabindex', '0');
+                cardEl.setAttribute('role', 'button');
+                cardEl.setAttribute('aria-label', `${card.name} card, click for details`);
+                
+                const symbolEl = document.createElement('div');
+                symbolEl.className = 'card-symbol';
+                symbolEl.textContent = card.symbol;
+                
+                const nameEl = document.createElement('div');
+                nameEl.className = 'card-name';
+                nameEl.textContent = card.name;
+                
+                const meaningEl = document.createElement('div');
+                meaningEl.className = 'card-meaning';
+                meaningEl.textContent = isReversed ? card.reversed : card.meaning;
+                
+                cardEl.appendChild(symbolEl);
+                cardEl.appendChild(nameEl);
+                cardEl.appendChild(meaningEl);
+                
+                cardDiv.appendChild(posLabel);
+                cardDiv.appendChild(cardEl);
+                
+                return cardDiv;
+            }
+
+            async getAIInterpretation() {
+                const interpretationDiv = document.getElementById('interpretation');
+                const interpretationText = document.getElementById('interpretationText');
+                
+                interpretationDiv.style.display = 'block';
+                interpretationText.innerHTML = '<div class="loading-text"><div class="loading"></div><span>AI is interpreting your cards...</span></div>';
+                
+                // Build prompt
+                const spread = this.spreads[this.state.currentSpread];
+                let prompt = `You are an experienced tarot reader providing insightful, personalized interpretations. `;
+                
+                if (this.state.userQuestion) {
+                    prompt += `The querent asks: "${this.state.userQuestion}". `;
+                }
+                
+                prompt += `This is a ${spread.name} spread with the following cards:\n\n`;
+                
+                this.state.drawnCards.forEach(card => {
+                    prompt += `${card.position}: ${card.name} ${card.isReversed ? '(Reversed)' : '(Upright)'}\n`;
+                });
+                
+                prompt += `\nProvide a cohesive interpretation that:
+                1. Explains each card's meaning in its position
+                2. Weaves the cards into a unified narrative
+                3. Offers practical, actionable insights
+                4. Maintains an empowering, constructive tone`;
+                
+                if (this.state.userQuestion) {
+                    prompt += `\n5. Directly addresses the question: "${this.state.userQuestion}"`;
+                }
+                
+                prompt += `\n\nKeep the interpretation to 3-4 insightful paragraphs.`;
+                
+                // API call would go here
+                const apiKey = this.state.settings.apiKey || 'AIzaSyDoPmF8AI6cuG60LPYS3hRS-GN7fkGxZe8';
+                
+                try {
+                    // Note: In production, this should call your backend
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ text: prompt }]
+                            }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1000
+                            }
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error('API request failed');
+                    
+                    const data = await response.json();
+                    const aiResponse = data.candidates[0].content.parts[0].text;
+                    
+                    // Display interpretation
+                    this.displayInterpretation(aiResponse);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.displayFallbackInterpretation();
+                }
+            }
+
+            displayInterpretation(text) {
+                const interpretationText = document.getElementById('interpretationText');
+                let html = '';
+                
+                if (this.state.userQuestion) {
+                    html += `<p><strong>Your Question:</strong> ${this.state.userQuestion}</p>`;
+                }
+                
+                const paragraphs = text.split('\n\n');
+                paragraphs.forEach(p => {
+                    if (p.trim()) {
+                        html += `<p>${p}</p>`;
+                    }
+                });
+                
+                interpretationText.innerHTML = html;
+            }
+
+            displayFallbackInterpretation() {
+                const interpretationText = document.getElementById('interpretationText');
+                let html = '<div class="error-message">Unable to connect to AI. Please check your API key in settings.</div>';
+                
+                if (this.state.userQuestion) {
+                    html += `<p><strong>Your Question:</strong> ${this.state.userQuestion}</p>`;
+                }
+                
+                html += '<p><strong>Your Cards:</strong></p>';
+                this.state.drawnCards.forEach(card => {
+                    html += `<p><strong>${card.position}:</strong> ${card.name} ${card.isReversed ? '(Reversed)' : ''} - ${card.isReversed ? card.reversed : card.meaning}</p>`;
+                });
+                
+                interpretationText.innerHTML = html;
+            }
+
+            // Card Detail Modal
+            showCardDetail(index) {
+                const card = this.tarotDeck[index];
+                const modal = document.getElementById('cardModal');
+                const title = document.getElementById('modalTitle');
+                const body = document.getElementById('modalBody');
+                
+                title.textContent = card.name;
+                body.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 4em;">${card.symbol}</div>
+                    </div>
+                    <h3>Upright Meaning</h3>
+                    <p>${card.meaning}</p>
+                    <h3>Reversed Meaning</h3>
+                    <p>${card.reversed}</p>
+                    <h3>Keywords</h3>
+                    <p>${card.keywords ? card.keywords.join(', ') : 'Wisdom, Insight, Guidance'}</p>
+                `;
+                
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+                
+                if (this.state.settings.soundEnabled) {
+                    this.playSound('open');
+                }
+            }
+
+            closeModal() {
+                const modal = document.getElementById('cardModal');
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+
+            // Reading Actions
+            saveReading() {
+                const reading = {
+                    date: new Date().toISOString(),
+                    spreadName: this.spreads[this.state.currentSpread].name,
+                    cards: this.state.drawnCards,
+                    question: this.state.userQuestion,
+                    interpretation: document.getElementById('interpretationText').innerHTML,
+                    favorite: false
+                };
+                
+                this.state.readingHistory.unshift(reading);
+                if (this.state.readingHistory.length > 50) {
+                    this.state.readingHistory.pop();
+                }
+                
+                this.saveHistory();
+                this.updateHistoryDisplay();
+                this.showMessage('Reading saved to history!', 'success');
+            }
+
+            viewReading(index) {
+                const reading = this.state.readingHistory[index];
+                // Display the saved reading
+                document.getElementById('spreadSelector').style.display = 'none';
+                document.getElementById('cardDeck').style.display = 'none';
+                document.getElementById('spreadArea').className = 'spread-area active';
+                
+                const container = document.getElementById('cardsContainer');
+                container.innerHTML = '';
+                
+                reading.cards.forEach((card, i) => {
+                    const cardDiv = this.createCardElement(card, card.isReversed, card.position, i);
+                    container.appendChild(cardDiv);
+                });
+                
+                document.getElementById('interpretation').style.display = 'block';
+                document.getElementById('interpretationText').innerHTML = reading.interpretation;
+            }
+
+            deleteReading(index) {
+                if (confirm('Are you sure you want to delete this reading?')) {
+                    this.state.readingHistory.splice(index, 1);
+                    this.saveHistory();
+                    this.updateHistoryDisplay();
+                    this.showMessage('Reading deleted', 'success');
+                }
+            }
+
+            shareReading() {
+                const shareData = {
+                    title: 'My Tarot Reading',
+                    text: `I just did a ${this.spreads[this.state.currentSpread].name} tarot reading!`,
+                    url: window.location.href
+                };
+                
+                if (navigator.share) {
+                    navigator.share(shareData);
+                } else {
+                    // Fallback - copy to clipboard
+                    const text = `My ${this.spreads[this.state.currentSpread].name} Tarot Reading:\n\n${this.state.drawnCards.map(c => `${c.position}: ${c.name}`).join('\n')}`;
+                    navigator.clipboard.writeText(text);
+                    this.showMessage('Reading copied to clipboard!', 'success');
+                }
+            }
+
+            resetReading() {
+                this.state.currentSpread = null;
+                this.state.drawnCards = [];
+                this.state.userQuestion = '';
+                document.getElementById('userQuestion').value = '';
+                document.getElementById('spreadSelector').style.display = 'block';
+                document.getElementById('cardDeck').style.display = 'none';
+                document.getElementById('spreadArea').className = 'spread-area';
+                document.getElementById('interpretation').style.display = 'none';
+            }
+
+            // Utility Functions
+            showMessage(text, type) {
+                const div = document.createElement('div');
+                div.className = type === 'success' ? 'success-message' : 'error-message';
+                div.textContent = text;
+                div.style.position = 'fixed';
+                div.style.top = '20px';
+                div.style.left = '50%';
+                div.style.transform = 'translateX(-50%)';
+                div.style.zIndex = '2000';
+                document.body.appendChild(div);
+                
+                setTimeout(() => {
+                    div.remove();
+                }, 3000);
+            }
+
+            createStars() {
+                const starsContainer = document.getElementById('stars');
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                    starsContainer.appendChild(star);
+                }
+            }
+
+            // Audio System
+            setupAudioContext() {
+                this.audioContext = null;
+                this.sounds = {
+                    draw: 440,
+                    flip: 523,
+                    select: 659,
+                    toggle: 784,
+                    open: 880
+                };
+            }
+
+            playSound(type) {
+                if (!this.state.settings.soundEnabled) return;
+                
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                oscillator.frequency.value = this.sounds[type] || 440;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.2);
+            }
+
+            // Keyboard Navigation
+            setupKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                    }
+                });
+                
+                // Add keyboard support for spread selection
+                document.querySelectorAll('.spread-card').forEach(card => {
+                    card.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            card.click();
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize app immediately when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                app = new TarotApp();
+                window.app = app;
+            });
+        } else {
+            // DOM already loaded
+            app = new TarotApp();
+            window.app = app;
+        }
+    </script>
+</body>
+</html>
